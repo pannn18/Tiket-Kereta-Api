@@ -7,49 +7,48 @@ import EditKereta from "./editkereta"
 
 type props = {
     item: keretaType
-
 }
 
-const Train = (myprop: props) => {
+const Train = ({ item }: props) => {
     return (
-        <div className="w-full flex my-2 border rounded-md">
-            <div className="w-full p-2 md:w-4/12 flex flex-col">
-                <small className=" text-sm font-medium">
-                    Nama Kereta
-                </small>
-                <span>
-                    <Link href={`/karyawan/kereta/${myprop.item.id}`}>
-                    {myprop.item.name}                    
+        <div className="w-full border rounded-xl shadow-sm hover:shadow-md transition p-4 bg-white my-3">
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                {/* Nama Kereta */}
+                <div>
+                    <p className="text-xs font-semibold text-gray-500">Nama Kereta</p>
+                    <Link 
+                        href={`/karyawan/kereta/${item.id}`} 
+                        className="text-base font-medium text-blue-600 hover:underline"
+                    >
+                        {item.name}
                     </Link>
-                </span>
-            </div>
-            <div className="w-full p-2 md:w-4/12 flex flex-col">
-                <small className=" text-sm font-medium">
-                    Deskripsi Kereta
-                </small>
-                <span>
-                    {myprop.item.descriptions}
-                </span>
-            </div>
-            <div className="w-full p-2 md:w-4/12 flex flex-col">
-                <small className=" text-sm font-medium">
-                    Tipe Kereta
-                </small>
-                <span>
-                    {myprop.item.type}
-                </span>
-            </div>
-            <div className="w-full p-2 md:w-4/12 flex flex-col">
-                <small className=" text-sm font-medium">
-                    Opsi
-                </small>
-                <div className="flex gap-2 items-center">
-                    <EditKereta kereta={myprop.item}/>
-                    <DropKereta kereta={myprop.item}/>
+                </div>
+
+                {/* Deskripsi */}
+                <div>
+                    <p className="text-xs font-semibold text-gray-500">Deskripsi Kereta</p>
+                    <p className="text-sm text-gray-700">{item.descriptions}</p>
+                </div>
+
+                {/* Tipe */}
+                <div>
+                    <p className="text-xs font-semibold text-gray-500">Tipe Kereta</p>
+                    <span className="px-2 py-1 text-xs rounded-full bg-blue-100 text-blue-700 font-medium">
+                        {item.type}
+                    </span>
+                </div>
+
+                {/* Opsi */}
+                <div>
+                    <p className="text-xs font-semibold text-gray-500">Opsi</p>
+                    <div className="flex gap-2 mt-1">
+                        <EditKereta kereta={item} />
+                        <DropKereta kereta={item} />
+                    </div>
                 </div>
             </div>
         </div>
-
     )
 }
+
 export default Train

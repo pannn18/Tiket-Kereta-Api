@@ -96,7 +96,7 @@ const DropKereta = (myprop: props) => {
                     {/* modal terror */}
                     <div className="w-full p-3 rounded-b-lg flex items-center justify-end gap-2">
                         <button type="button" onClick={() => closeModal()} className="px-4 py-2 rounded-md bg-slate-700 hover:bg-slate-600 text-white">
-                            Rasido cak
+                            Batal
                         </button>
                         <button type="submit" className="px-4 py-2 rounded-md bg-sky-700 hover:bg-sky-600 text-white">
                             Ya, saya yakin

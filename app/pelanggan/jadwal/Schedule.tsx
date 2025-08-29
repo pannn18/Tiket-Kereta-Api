@@ -5,61 +5,50 @@ type Props = {
     item: ScheduleType
 }
 
-const showType = (date: string) => {
-    const currentDate = new Date(date)
-    return currentDate
-    .toLocaleTimeString(`id-ID`, {
-        year: "numeric", 
-        month: "long",
-        day: "2-digit"
-    })
+const formatDateTime = (date: string) => {
+    const d = new Date(date)
+    return `${d.toLocaleDateString("id-ID", { day: "2-digit", month: "short", year: "numeric" })} • ${d.toLocaleTimeString("id-ID", { hour: "2-digit", minute: "2-digit" })}`
 }
-const Schedule = async (myProps: Props) => {
-    return(
-        <div className="flex flex-wrap w-full border rounded-md shadow-md my-2">
-            <div className="w-full md:w-3/12 p-3 flex flex-col">
-                <small className="text-xs font-semibold text-sky-700">
-                    Berangkat Dari
-                </small>
-                <strong>{myProps.item.departured_location}</strong>
-                <small className="text-xs font-semibold text-sky-700">
-                    Waktu Keberangkatan
-                </small>
-                <strong>{showType(myProps.item.departured_time)}</strong>
+
+const Schedule = ({ item }: Props) => {
+    return (
+        <div className="flex flex-col md:flex-row w-full bg-white rounded-xl shadow-md my-3 overflow-hidden">
+            {/* Berangkat */}
+            <div className="flex-1 p-4 border-b md:border-b-0 md:border-r border-gray-200">
+                <p className="text-xs text-gray-500 font-semibold mb-1">Berangkat Dari</p>
+                <h3 className="text-lg font-semibold text-sky-700">{item.departured_location}</h3>
+                <p className="text-xs text-gray-500 font-semibold mt-3">Waktu Keberangkatan</p>
+                <p className="font-medium">{formatDateTime(item.departured_time)}</p>
             </div>
-            <div className="w-full md:w-3/12 p-3 flex flex-col">
-                <small className="text-xs font-semibold text-sky-700">
-                    Tiba Di
-                </small>
-                <strong>{myProps.item.arrived_location}</strong>
-                <small className="text-xs font-semibold text-sky-700">
-                    Waktu Kedatangan
-                </small>
-                <strong>{showType(myProps.item.arrived_time)}</strong>
+
+            {/* Tiba */}
+            <div className="flex-1 p-4 border-b md:border-b-0 md:border-r border-gray-200">
+                <p className="text-xs text-gray-500 font-semibold mb-1">Tiba Di</p>
+                <h3 className="text-lg font-semibold text-sky-700">{item.arrived_location}</h3>
+                <p className="text-xs text-gray-500 font-semibold mt-3">Waktu Kedatangan</p>
+                <p className="font-medium">{formatDateTime(item.arrived_time)}</p>
             </div>
-            <div className="w-full md:w-4/12 p-3  flex flex-col">
-                <small className="text-xs font-semibold text-sky-700">
-                    Unit Kereta
-                </small>
-                <strong>{myProps.item.train_details.name}</strong>
-                <small className="text-xs font-semibold text-sky-700">
-                    Price
-                </small>
-                <strong>{myProps.item.price.toLocaleString(`en-US`, {style: `currency`, currency:`IDR`})}</strong>
+
+            {/* Kereta & Harga */}
+            <div className="flex-1 p-4 border-b md:border-b-0 md:border-r border-gray-200">
+                <p className="text-xs text-gray-500 font-semibold mb-1">Unit Kereta</p>
+                <h3 className="text-lg font-semibold">{item.train_details.name}</h3>
+                <p className="text-xs text-gray-500 font-semibold mt-3">Harga</p>
+                <p className="font-medium text-orange-500">
+                    {item.price.toLocaleString("id-ID", { style: "currency", currency: "IDR" })}
+                </p>
             </div>
-            <div className="w-full md:w-2/12 p-3 gap-2 flex flex-col">
-                <small className="text-sm font-medium">
-                    Opsi
-                </small>
-                <div className="flex gap-2 items-center">
-                    <Link href={`/pelanggan/jadwal/${myProps.item.id}`}>
-                        <button className="px-4 py-2 rounded-md bg-orange-500 hover:bg-orange-600 text-white">
-                            Pesan
-                        </button>   
-                    </Link>
-                </div>
+
+            {/* Tombol Pesan */}
+            <div className="flex-1 p-4 flex items-center justify-center">
+                <Link href={`/pelanggan/jadwal/${item.id}`}>
+                    <button className="w-full md:w-auto px-6 py-2 bg-gradient-to-r from-orange-400 to-orange-500 hover:from-orange-500 hover:to-orange-600 text-white font-semibold rounded-lg shadow-md transition transform hover:scale-105">
+                        Pesan
+                    </button>
+                </Link>
             </div>
         </div>
     )
 }
+
 export default Schedule

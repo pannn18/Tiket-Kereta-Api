@@ -13,51 +13,61 @@ const FilterJadwal = (myProp: props) => {
     const [arrived_location, setArrivedLocation] = useState<string>("")
     const router = useRouter()
 
-
     const handleSearch = () => {
         if (departured_location !== "" && arrived_location !== "") {
             router.push(`/pelanggan/jadwal?departured_location=${departured_location}&arrived_location=${arrived_location}`)
         }
     }
 
-    /** use effect digunakan untuk update data komponen ini dimuat ulang */
     useEffect(() => {
         setDeparturedLocation(myProp.departuredLocation)
         setArrivedLocation(myProp.arrivedLocation)
-        // ketika departured_location atau arrived_location diubah, maka useEffect akan dipanggil ulang
-        // ini berguna untuk menampilkan jadwal yang sesuai dengan filter yang dipilih user
     }, [myProp.departuredLocation, myProp.arrivedLocation])
+
     return (
-        <div>
-            <div className="my-5 w-full flex flex-wrap items-center">
-                <div className="w-full md:w-1/2 p-3">
-                    <strong className="text-white font-semibold">
+        <div className="bg-white p-5 rounded-xl shadow-lg">
+            <div className="flex flex-wrap gap-4">
+                {/* Stasiun Asal */}
+                <div className="flex-1 min-w-[200px]">
+                    <label className="block text-gray-700 font-semibold mb-1" htmlFor="departured_location">
                         Stasiun Asal
-                    </strong> <br />
-                    <input type="text" 
-                    id={`departured_location`} 
-                    className="w-full border p-2 rounded-md"
-                    value={departured_location}
-                    onChange={e => setDeparturedLocation(e.target.value)}
+                    </label>
+                    <input 
+                        type="text" 
+                        id="departured_location" 
+                        className="w-full border border-gray-300 p-3 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none transition"
+                        value={departured_location}
+                        onChange={e => setDeparturedLocation(e.target.value)}
+                        placeholder="Masukkan stasiun asal"
                     />
                 </div>
-                <div className="w-full md:w-1/2 p-3">
-                    <strong className="text-white font-semibold">
+
+                {/* Stasiun Tujuan */}
+                <div className="flex-1 min-w-[200px]">
+                    <label className="block text-gray-700 font-semibold mb-1" htmlFor="arrived_location">
                         Stasiun Tujuan
-                    </strong> <br />
-                    <input type="text" 
-                    id={`arrived_location`} 
-                    className="w-full border p-2 rounded-md"
-                    value={arrived_location}
-                    onChange={e => setArrivedLocation(e.target.value)}
+                    </label>
+                    <input 
+                        type="text" 
+                        id="arrived_location" 
+                        className="w-full border border-gray-300 p-3 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none transition"
+                        value={arrived_location}
+                        onChange={e => setArrivedLocation(e.target.value)}
+                        placeholder="Masukkan stasiun tujuan"
                     />
                 </div>
             </div>
-            <button type="button"
-            onClick={handleSearch}
-            className="px-4 py-2 rounded-md bg-orange-500 hover:bg-orange-600 text-white mx-3">
-                Cari
-            </button>
+
+            {/* Tombol Cari */}
+            <div className="mt-4">
+                <button
+                    type="button"
+                    onClick={handleSearch}
+                    className="px-6 py-3 rounded-lg bg-gradient-to-r from-orange-400 to-orange-500 hover:from-orange-500 hover:to-orange-600 text-white font-semibold shadow-md transition transform hover:scale-105"
+                >
+                    Cari
+                </button>
+            </div>
         </div>
     )
 }

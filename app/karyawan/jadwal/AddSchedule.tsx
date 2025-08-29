@@ -1,210 +1,152 @@
-"use client"
+"use client";
 
-import Modal from "@/components/Modal"
-import axiosInstance from "@/helper/api"
-import { getCookie } from "@/helper/client-cookie"
-import { useRouter } from "next/navigation"
-import React, { FormEvent, useState } from "react"
-import DatePicker from "react-datepicker"
-import { toast, ToastContainer } from "react-toastify"
-import { keretaType } from "../types"
+import Modal from "@/components/Modal";
+import axiosInstance from "@/helper/api";
+import { getCookie } from "@/helper/client-cookie";
+import { useRouter } from "next/navigation";
+import React, { FormEvent, useState } from "react";
+import DatePicker from "react-datepicker";
+import { toast, ToastContainer } from "react-toastify";
+import { keretaType } from "../types";
+import { FaTrain, FaClock, FaMapMarkerAlt, FaMoneyBill } from "react-icons/fa";
 
 type props = {
     trains: keretaType[]
-}
+};
 
-const AddSchedule = (myProp: props) => {
-    const router = useRouter()
-    const [show, setShow] = useState<boolean>(false)
-    
-    const [departured_location, setDeparturedLocation] = useState<string>("")
-    const [arrived_location, setArrivedLocation] = useState<string>("")
-    const [departured_time, setDeparturedTime] = useState<Date>(new Date)
-    const [arrived_time, setArrivedTime] = useState<Date>(new Date)
-    const [train_id, setTrainId] = useState<number>(0)
-    const [price, setPrice] = useState<number>(0)
+const AddSchedule = ({ trains }: props) => {
+    const router = useRouter();
+    const [show, setShow] = useState(false);
+    const [departublue_location, setDepartublueLocation] = useState("");
+    const [arrived_location, setArrivedLocation] = useState("");
+    const [departublue_time, setDepartublueTime] = useState(new Date());
+    const [arrived_time, setArrivedTime] = useState(new Date());
+    const [train_id, setTrainId] = useState(0);
+    const [price, setPrice] = useState(0);
 
     const openModal = () => {
-        setShow(true)
-        setDeparturedLocation("")
-        setArrivedLocation("")
-        setDeparturedTime(new Date)
-        setArrivedTime(new Date)
-        setTrainId(0)
-        setPrice(0)
-    }
-    const closeModal =() => {
-        setShow(false)
-    }
-    const handleSubmit =async (e: FormEvent) =>{
+        setShow(true);
+        setDepartublueLocation("");
+        setArrivedLocation("");
+        setDepartublueTime(new Date());
+        setArrivedTime(new Date());
+        setTrainId(0);
+        setPrice(0);
+    };
+
+    const closeModal = () => setShow(false);
+
+    const handleSubmit = async (e: FormEvent) => {
+        e.preventDefault();
         try {
-            e.preventDefault()
-            const TOKEN =getCookie(`token`)
-            const url=`/schedule`
-            const requestData={
-                departured_location, departured_time, arrived_location, arrived_time, train_id, price
+            const TOKEN = getCookie("token");
+            const url = `/schedule`;
+            const requestData = { departublue_location, departublue_time, arrived_location, arrived_time, train_id, price };
+
+            const response: any = await axiosInstance.post(url, requestData, {
+                headers: { authorization: `Bearer ${TOKEN}` },
+            });
+
+            toast(response.data.message, {
+                containerId: "toastAddJadwal",
+                type: response.data.success ? "success" : "warning",
+            });
+
+            if (response.data.success) {
+                setShow(false);
+                setTimeout(() => router.refresh(), 1000);
             }
-            //hit end point to add kereta
-            const response:any = await axiosInstance
-            .post(url,requestData,{
-                headers:{
-                    authorization:`Bearer ${TOKEN}`
-                }
-            })
-            const message = response.data.message
-            if(response.data.success === true){
-                toast(message,
-                    {
-                    containerId:`toastAddJadwal`,
-                    type:"success"
-                    }
-            )
-            setShow(false)
-            //reload space
-            setTimeout(() => router.refresh(),1000)
-        }
-        else{
-            toast(message,
-                {
-                    containerId:`toastAddJadwal`,
-                    type:"warning"
-                }
-            )
-        }
         } catch (error) {
             console.log(error);
-            toast(
-                `something wronk`,
-                {
-                    containerId:`toastAddJadwal`,
-                    type:"error"
-                }
-            )
+            toast("Something went wrong", { containerId: "toastAddJadwal", type: "error" });
         }
-    }
-    return(
+    };
+
+    const inputClass = "w-full p-2 border border-gray-200 rounded-md outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-300 transition-all";
+
+    return (
         <div>
-            <ToastContainer containerId={`toastAddJadwal`}/>
-            <button className="px-4 py-2 text-white bg-red-600 hover:bg-red-700"
-            type="button"
-            onClick={() => openModal()}>
-            Tambah Jadwal Kereta
+            <ToastContainer containerId="toastAddJadwal" />
+            <button
+                onClick={openModal}
+                className="flex items-center gap-2 px-5 py-2 bg-gradient-to-r from-blue-600 to-blue-500 text-white rounded-lg shadow-md hover:brightness-110 transition"
+            >
+                <FaTrain /> Tambah Jadwal Kereta
             </button>
+
             <Modal isShow={show}>
-                <form onSubmit={handleSubmit}>
-            {/** modal header */}
-                    <div className="w-full p-3 rounded-t-lg">
-                        <h1 className="font-semibold text-lg">
-                            Tambah Jadwal Kereta
-                        </h1>
-                        <span className="text-sm text-slate-500">
-                            Pastikan data yang diisi sudah benar
-                        </span>
+                <form onSubmit={handleSubmit} className="bg-white rounded-lg overflow-hidden">
+                    {/* Header */}
+                    <div className="bg-blue-500 text-white p-4">
+                        <h2 className="text-lg font-bold flex items-center gap-2">
+                            <FaTrain /> Tambah Jadwal Kereta
+                        </h2>
+                        <p className="text-sm opacity-90 mt-1">Pastikan data yang diisi sudah benar</p>
                     </div>
 
-                    {/** modal body */}
-                    <div className="w-full p-2">
-                        <div className="my-2 border rounded-md">
-                            <small className="text-xs font-semibold text-sky-500">
-                                Berangkat dari
-                            </small>
-                            <input type="text" id={`departured_location`}
-                            value={departured_location}
-                            onChange={e => setDeparturedLocation(e.target.value)}
-                            className="p-1 outline-6 w-full hover:border-b hover:border-b-red-600"
-                            required={true}/>
-                        </div>
-                    </div>
-                    <div className="w-full p-2">
-                        <div className="my-2 border rounded-md">
-                            <small className="text-xs font-semibold text-sky-500">
-                                Waktu Keberangkatan
-                            </small> 
-                            <br />
-                            <DatePicker
-                            showTimeInput={true}
-                            id={`departured_time`}
-                            className="p-1 outline-6 w-full hover:border-b hover:border-b-red-600"
-                            selected={new Date(departured_time)}
-                            dateFormat={`dd MMMM YYYY HH:mm`}
-                            onChange={date => setDeparturedTime(date|| new Date())}/>
-                        </div>
-                    </div>
-                    <div className="w-full p-2">
-                        <div className="my-2 border rounded-md">
-                            <small className="text-xs font-semibold text-sky-500">
-                                Tiba di
-                            </small>
-                            <input type="text" id={`arrived_location`}
-                            value={arrived_location}
-                            onChange={e => setArrivedLocation(e.target.value)}
-                            className="p-1 outline-none w-full hover:border-b hover:border-b-red-600"
-                            required={true}/>
-                        </div>
-                    </div>
-                    <div className="w-full p-2">
-                        <div className="my-2 border rounded-md">
-                            <small className="text-xs font-semibold text-sky-500">
-                                Waktu Kedatangan
-                            </small>
-                            <br />
-                            <DatePicker
-                            showTimeInput={true}
-                            id={`arrived_time`}
-                            className="p-1 outline-6 w-full hover:border-b hover:border-b-red-600"
-                            selected={new Date(arrived_time)}
-                            dateFormat={`dd MMMM YYYY HH:mm`}
-                            onChange={date => setArrivedTime(date|| new Date())}/>
-                        </div>
-                    </div>
-                    <div className="w-full p-3">
-                        <div className="my-2 border rounded-md">
-                            <small className="text-xs font-semibold text-sky-500">
-                                Harga
-                            </small>
-                            <input type="number" id={`price`}
-                            value={price}
-                            onChange={e => setPrice(Number(e.target.value))}
-                            className="p-1 outline-none w-full hover:border-b hover:border-b-red-600"
-                            required={true}/>
-                        </div>
-                    </div>
-                    <div className="w-full p-3">
-                        <div className="my-2 border rounded-md">
-                            <small className="text-xs font-semibold text-sky-500">
-                                Jenis Kereta
-                            </small>
-                            <select id={`train_id`}
-                            value={train_id.toString()}
-                            onChange={e => setTrainId(Number(e.target.value))}
-                            className="p-1 outline-none w-full hover:border-b-red-600"
-                            required={true}>
+                    {/* Body */}
+                    <div className="p-4 space-y-3">
+                        <InputField label="Berangkat dari" icon={<FaMapMarkerAlt />} value={departublue_location} onChange={setDepartublueLocation} />
+                        <InputDate label="Waktu Keberangkatan" icon={<FaClock />} value={departublue_time} onChange={setDepartublueTime} />
+                        <InputField label="Tiba di" icon={<FaMapMarkerAlt />} value={arrived_location} onChange={setArrivedLocation} />
+                        <InputDate label="Waktu Kedatangan" icon={<FaClock />} value={arrived_time} onChange={setArrivedTime} />
+                        <InputField label="Harga" icon={<FaMoneyBill />} type="number" value={price.toString()} onChange={(val) => setPrice(Number(val))} />
+                        <div className="flex flex-col border rounded-md p-2">
+                            <label className="text-sky-600 font-semibold text-sm">Jenis Kereta</label>
+                            <select
+                                value={train_id.toString()}
+                                onChange={(e) => setTrainId(Number(e.target.value))}
+                                className={inputClass}
+                                required
+                            >
                                 <option value="">Pilih Jenis Kereta</option>
-                                {
-                                    myProp.trains.map((kereta, index) =>(
-                                        <option value={kereta.id}
-                                        key={`optionKereta-${index}`}>
-                                            {kereta.name}
-                                        </option>
-                                    ))
-                                }
+                                {trains.map((kereta) => (
+                                    <option key={kereta.id} value={kereta.id}>{kereta.name}</option>
+                                ))}
                             </select>
                         </div>
                     </div>
-                    {/** modal footer */}
-                    <div className="w-full p-3 rounded-b-lg flex items-center justify-end gap-2">
-                        <button type="button" onClick={() => closeModal()}
-                            className="px-4 py-2 rounded-md bg-slate-700 hover:bg-slate-600 text-white">
+
+                    {/* Footer */}
+                    <div className="flex justify-end gap-3 p-4 bg-gray-50">
+                        <button type="button" onClick={closeModal} className="px-4 py-2 rounded-md bg-gray-700 hover:bg-gray-600 text-white">
                             Close
                         </button>
-                        <button type="submit"
-                            className="px-4 py-2 rounded-md bg-sky-700 hover:bg-sky-600 text-white">
+                        <button type="submit" className="px-4 py-2 rounded-md bg-blue-600 hover:bg-blue-500 text-white">
                             Save
                         </button>
                     </div>
                 </form>
             </Modal>
         </div>
-    )
+    );
+};
+
+interface InputProps {
+    label: string;
+    value: string;
+    onChange: (val: string) => void;
+    type?: string;
+    icon?: React.ReactNode;
 }
-export default AddSchedule
+const InputField = ({ label, value, onChange, type = "text", icon }: InputProps) => (
+    <div className="flex flex-col border rounded-md p-2">
+        <label className="flex items-center gap-2 text-sky-600 font-semibold text-sm">{icon} {label}</label>
+        <input type={type} value={value} onChange={(e) => onChange(e.target.value)} className="mt-1 p-2 border-b-2 border-transparent focus:border-b-sky-600 outline-none transition" required />
+    </div>
+);
+
+interface InputDateProps {
+    label: string;
+    value: Date;
+    onChange: (val: Date) => void;
+    icon?: React.ReactNode;
+}
+const InputDate = ({ label, value, onChange, icon }: InputDateProps) => (
+    <div className="flex flex-col border rounded-md p-2">
+        <label className="flex items-center gap-2 text-sky-600 font-semibold text-sm">{icon} {label}</label>
+        <DatePicker selected={value} onChange={(date) => onChange(date || new Date())} showTimeInput dateFormat="dd MMMM yyyy HH:mm" className="mt-1 p-2 border-b-2 border-transparent w-full focus:border-b-sky-600 outline-none transition" />
+    </div>
+);
+
+export default AddSchedule;

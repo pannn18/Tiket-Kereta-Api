@@ -11,6 +11,7 @@ type props = {
     }>
 }
 
+
 const getJadwal = async (
     departured_location: string,
     arrived_location: string
@@ -18,7 +19,6 @@ const getJadwal = async (
     try {
         const url = `/schedule?departured_location=${departured_location}&arrived_location=${arrived_location}`
         const TOKEN = await getServerCookie(`token`)
-        /**hit endpoint */
         const response: any = await axiosInstance.get(url, {
             headers: { Authorization: `Bearer ${TOKEN}` }
         })
@@ -30,49 +30,48 @@ const getJadwal = async (
     }
 }
 
+
 const JadwalPage = async (myProp: props) => {
     const departured_location = (await myProp.searchParams).departured_location?.toString() || ""
     const arrived_location = (await myProp.searchParams).arrived_location?.toString() || ""
     const dataJadwal = await getJadwal(departured_location, arrived_location)
+
     return (
-        <div className="w-full p-3">
-            <div className="bg-blue-700 w-full p-3 rounded-md shadow-md">
-                <h1 className="text-white text-xl font-bold">
-                    Pemesanan Tiket Kereta Api
-                </h1>
-                <p className="text-white text-sm">
+        <div className="w-full p-6 bg-gray-50 min-h-screen space-y-6">
+
+            {/* Filter Form Card */}
+            <div className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white p-5 rounded-xl shadow-lg">
+                <h1 className="text-2xl font-bold mb-1">Pemesanan Tiket Kereta Api</h1>
+                <p className="text-sm opacity-90 mb-4">
                     {new Date().toLocaleDateString("id-ID", { weekday: "long", day: "numeric", month: "long", year: "numeric" })}
                 </p>
                 <FilterJadwal 
-                departuredLocation={departured_location} 
-                arrivedLocation={arrived_location} 
+                    departuredLocation={departured_location} 
+                    arrivedLocation={arrived_location} 
                 />
             </div>
-            {
-                departured_location !== "" && 
-                arrived_location !== "" &&
-                //** div ini akan tampil jika departur dan arivv telah diisi */
-                <div className="my-3">
-                    {
-                        dataJadwal.length == 0 ?
-                        <div className="w-full p-3 rounded-md bg-orange-100">
-                            <p className="text-sm text-slate-500">
-                                Jadwal tidak ada 
-                            </p>
+
+            {/* Schedule List */}
+            <div className="space-y-4">
+                {departured_location && arrived_location ? (
+                    dataJadwal.length === 0 ? (
+                        <div className="flex justify-center items-center p-6 bg-yellow-100 rounded-xl shadow-md">
+                            <p className="text-sm text-yellow-800 font-medium">Jadwal tidak ditemukan 😔</p>
                         </div>
-                        :
-                        <div>
-                            {
-                                dataJadwal.map((jadwal, index) => (
-                                    <Schedule 
-                                    item={jadwal}
-                                    key={`keyJadwal-${index}`}/>
-                                ))
-                            }
+                    ) : (
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                            {dataJadwal.map((jadwal, index) => (
+                                <Schedule 
+                                    item={jadwal} 
+                                    key={`keyJadwal-${index}`} 
+                                />
+                            ))}
                         </div>
-                    }
-                </div>
-}
+                    )
+                ) : (
+                    <div className="text-center text-gray-400">Silakan pilih stasiun asal dan tujuan terlebih dahulu.</div>
+                )}
+            </div>
         </div>
     )
 }
