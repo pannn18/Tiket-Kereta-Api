@@ -15,7 +15,9 @@ const FilterJadwal = (myProp: props) => {
 
     const handleSearch = () => {
         if (departured_location !== "" && arrived_location !== "") {
-            router.push(`/pelanggan/jadwal?departured_location=${departured_location}&arrived_location=${arrived_location}`)
+            router.push(
+                `/pelanggan/jadwal?departured_location=${departured_location}&arrived_location=${arrived_location}`
+            )
         }
     }
 
@@ -29,30 +31,40 @@ const FilterJadwal = (myProp: props) => {
             <div className="flex flex-wrap gap-4">
                 {/* Stasiun Asal */}
                 <div className="flex-1 min-w-[200px]">
-                    <label className="block text-gray-700 font-semibold mb-1" htmlFor="departured_location">
+                    <label
+                        className="block text-gray-700 font-semibold mb-1"
+                        htmlFor="departured_location"
+                    >
                         Stasiun Asal
                     </label>
-                    <input 
-                        type="text" 
-                        id="departured_location" 
-                        className="w-full border border-gray-300 p-3 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none transition"
+                    <input
+                        type="text"
+                        id="departured_location"
+                        className="w-full border border-gray-300 p-3 rounded-lg 
+                                   focus:ring-2 focus:ring-blue-500 focus:outline-none 
+                                   transition text-black placeholder-gray-400"
                         value={departured_location}
-                        onChange={e => setDeparturedLocation(e.target.value)}
+                        onChange={(e) => setDeparturedLocation(e.target.value)}
                         placeholder="Masukkan stasiun asal"
                     />
                 </div>
 
                 {/* Stasiun Tujuan */}
                 <div className="flex-1 min-w-[200px]">
-                    <label className="block text-gray-700 font-semibold mb-1" htmlFor="arrived_location">
+                    <label
+                        className="block text-gray-700 font-semibold mb-1"
+                        htmlFor="arrived_location"
+                    >
                         Stasiun Tujuan
                     </label>
-                    <input 
-                        type="text" 
-                        id="arrived_location" 
-                        className="w-full border border-gray-300 p-3 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none transition"
+                    <input
+                        type="text"
+                        id="arrived_location"
+                        className="w-full border border-gray-300 p-3 rounded-lg 
+                                   focus:ring-2 focus:ring-blue-500 focus:outline-none 
+                                   transition text-black placeholder-gray-400"
                         value={arrived_location}
-                        onChange={e => setArrivedLocation(e.target.value)}
+                        onChange={(e) => setArrivedLocation(e.target.value)}
                         placeholder="Masukkan stasiun tujuan"
                     />
                 </div>
@@ -63,7 +75,10 @@ const FilterJadwal = (myProp: props) => {
                 <button
                     type="button"
                     onClick={handleSearch}
-                    className="px-6 py-3 rounded-lg bg-gradient-to-r from-orange-400 to-orange-500 hover:from-orange-500 hover:to-orange-600 text-white font-semibold shadow-md transition transform hover:scale-105"
+                    className="px-6 py-3 rounded-lg bg-gradient-to-r from-orange-400 to-orange-500 
+                               hover:from-orange-500 hover:to-orange-600 
+                               text-white font-semibold shadow-md 
+                               transition transform hover:scale-105"
                 >
                     Cari
                 </button>
